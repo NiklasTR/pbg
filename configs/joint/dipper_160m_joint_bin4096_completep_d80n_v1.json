@@ -1,0 +1,145 @@
+{
+  "run_name": "dipper-160m-joint-bin4096-completep-d80n-v1",
+  "run_notes": "160M joint CompleteP D=80N stable plus 16N WSD cooldown on the full joint release. Mirrors the pristine 160M architecture and optimizer; unified prompt topology/traversal; 128 global rows (64/GPU, recorded 160M H100 optimum) on 2 H100.",
+  "seed": 42,
+  "planning": {
+    "parent_path": "parents/dipper_160m_joint_bin4096_parent_seed42_v1.ckpt",
+    "parent_sha256": "2d8ff14662cd037b5bf2c636d1e0b36308a3c81fdc52bdc1b6678c09df304922",
+    "parent_step": 0,
+    "parent_embedded_step": null,
+    "source_phase": "untrained_parent_fixed_sha256",
+    "parent_bytes": 650255567,
+    "vocab_sha256": "3c5f0963a1ee700d082fd07123566e6e881e28abe9d5193c5ec0d96ccd779588",
+    "scout_manifest_sha256": "782cdf711194a6b53b605c28150a3f10e81015b76d7ac3721f287ad56c0c3db9",
+    "dataset": "joint_bin4096_v1",
+    "dataset_frames": 657725352,
+    "non_embedding_params": 159296256,
+    "stable_target_n": 80,
+    "cooldown_n": 16,
+    "stable_target_loss_tokens": 12743700480,
+    "cooldown_target_loss_tokens": 2548740096,
+    "estimated_loss_tokens_per_step": 131200,
+    "minimum_coordinate_loss_tokens": 165427481664,
+    "guaranteed_batch_capacity": 1257200,
+    "gpu_count": 2,
+    "process_rows": 128,
+    "global_batch_rows": 128,
+    "stable_end_step": 97132,
+    "final_step": 116559,
+    "cooldown_steps": 19427,
+    "milestone_n": [
+      20,
+      40,
+      80
+    ],
+    "milestone_steps": [
+      24283,
+      48566,
+      97132
+    ],
+    "atom_order": "prompt_canonical_v1",
+    "atom_order_implementation": "prompt_canonical_v1:rdkit-2026.03.3:linear-ff14sb-v1",
+    "resume_policy": "Fresh parent initially; requeue resumes only this run with its exact 128-row trained-batch cursor and traversal implementation.",
+    "scope": "160M joint D=80N production run; 3-day window with requeue resume across maintenance.",
+    "validation_job_id": "223074"
+  },
+  "model": {
+    "vocab_name": "joint_bin4096",
+    "bin_tokens": 4096,
+    "bin_width_pm": 0.8,
+    "max_seq_len": 1028,
+    "dim": 768,
+    "num_layers": 24,
+    "num_heads": 6,
+    "num_kv_heads": 3,
+    "head_dim": 128,
+    "intermediate_size": 2112,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true,
+    "max_samples_factor": 0.03,
+    "prompt_format": "compact_kelvin_v1",
+    "atom_order": "prompt_canonical_v1",
+    "atom_order_implementation": "prompt_canonical_v1:rdkit-2026.03.3:linear-ff14sb-v1",
+    "residual_scale": 0.6666666666666666,
+    "unembedding_scale": 0.6666666666666666
+  },
+  "data": {
+    "batch_size": 64,
+    "prefetch": 8,
+    "data_loader_workers": 8,
+    "sources": [
+      {
+        "name": "joint_bin4096_v1",
+        "dir": "many_molecules/joint/joint_bin4096_v1",
+        "adapter": "n4_smiles",
+        "sample_layout": "n4_json_pair_v1",
+        "molecular_single_pass": true,
+        "packing": "greedy",
+        "environment_prompt": {
+          "vacuum": "vacuum",
+          "implicit_water": "water",
+          "explicit_water": "water"
+        },
+        "molecular_append_only": true
+      }
+    ],
+    "prefetch_per_process": 16,
+    "data_loader_workers_per_process": 8
+  },
+  "optimizer": {
+    "lr": 0.0008164965809277262,
+    "total_steps": 116559,
+    "cooldown_steps": 19427,
+    "schedule": "wsd",
+    "warmup_steps": 5000,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "bfloat16",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.1224744871391589,
+    "adam_weight_decay": 0.1,
+    "adamw_lr_ratio": 1.224744871391589,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 116559,
+    "log_every": 20,
+    "save_every": 1000,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_160m_joint_bin4096_completep_d80n_v1",
+    "start_checkpoint": "parents/dipper_160m_joint_bin4096_parent_seed42_v1.ckpt",
+    "resume_optimizer": false,
+    "resume_latest": false,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      24283,
+      48566,
+      97132,
+      116559
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "accelerator": "h100nvl"
+  }
+}

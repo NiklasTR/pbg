@@ -1,0 +1,125 @@
+{
+  "run_name": "dipper-30m-core_bin4096-prefix-control-d40n-seed43-r2-sys1of8-musica",
+  "run_notes": "Rebuttal conditioning ablation, prefix arm, 30m core_bin4096 at 40N stable + 8N cooldown, seed 43 (reference seed 42). Retrains the reference (dipper_30m_core_bin4096_ws_scaling to step 6558, then dipper_30m_core_bin4096_d_scaling_40n) from scratch: a training-seed replicate and a check of the current code. System-fraction arm: only the 2713 training systems in configs/dipper/rebuttal/system_subsets/seed43_1of8.txt (1/8, stratified by length), each with its full 200 ns trajectory; the run reads about 0.08 epochs of this subset.",
+  "seed": 43,
+  "planning": {
+    "seed": 43,
+    "reference_seed": 42,
+    "reference_parent": "parents/dipper_30m_core_bin4096_parent_seed42.ckpt",
+    "non_embedding_params": 29895168,
+    "non_embedding_params_note": "Trunk only; the atom conditioner adapter is excluded.",
+    "atom_conditioner_non_embedding_params": 0,
+    "atom_conditioner_embedding_params": 0,
+    "stable_target_n": 40,
+    "cooldown_n": 8,
+    "total_target_n": 48,
+    "stable_target_loss_tokens": 1195806720,
+    "cooldown_target_loss_tokens": 239161344,
+    "target_loss_tokens": 1434968064,
+    "loss_tokens_per_step": 182359,
+    "step_count_status": "calibrated_rtx6000 (reference steps)",
+    "warmup_steps": 820,
+    "stable_steps": 6558,
+    "cooldown_steps": 1312,
+    "total_steps": 7870,
+    "reference_stable_run": "configs/dipper/ws_scaling/core/dipper_30m_core_bin4096_ws_scaling.json",
+    "reference_stable_step": 6558,
+    "reference_cooldown_run": "configs/dipper/d_scaling/core/dipper_30m_core_bin4096_d_scaling_40n.json",
+    "code_snapshot": "code_snapshot.patch",
+    "system_fraction": "1/8",
+    "sequence_allowlist": "configs/dipper/rebuttal/system_subsets/seed43_1of8.txt",
+    "n_systems": 2713,
+    "subset_frames": 54260000,
+    "expected_subset_epochs": 0.0788,
+    "full_data_control": "configs/dipper/rebuttal/musica/dipper_30m_core_bin4096_prefix_control_d40n_seed43_r2_musica.json",
+    "no_repeat_check": "max(shard_pass) of the final checkpoint must be <= 1 (no shard read twice)",
+    "site": "musica",
+    "start_checkpoint_local": "parents/dipper_30m_core_bin4096_parent_seed43.ckpt"
+  },
+  "model": {
+    "vocab_name": "core_bin4096",
+    "bin_tokens": 4096,
+    "bin_width_pm": 0.8,
+    "max_seq_len": 1028,
+    "dim": 512,
+    "num_layers": 8,
+    "num_heads": 8,
+    "num_kv_heads": 4,
+    "head_dim": 128,
+    "intermediate_size": 1408,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true,
+    "conditioning": "prefix"
+  },
+  "data": {
+    "batch_size": 128,
+    "prefetch": 8,
+    "data_loader_workers": 4,
+    "sources": [
+      {
+        "name": "many_peptides",
+        "dir": "many-peptides-md/webdatasets/single_frames",
+        "adapter": "many_peptides",
+        "derive_chem_helm_from_smiles": false,
+        "environment_prompt": {
+          "water": "Amber-ff14SB in OBC1 implicit water"
+        },
+        "temperature": 310.0,
+        "packing": "greedy",
+        "sequence_allowlist": "configs/system_subsets/seed43_1of8.txt"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.001,
+    "total_steps": 7870,
+    "cooldown_steps": 1312,
+    "schedule": "wsd",
+    "warmup_steps": 820,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "bfloat16",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.1,
+    "adamw_lr_ratio": 1.0,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 7870,
+    "save_every": 1000,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_30m_core_bin4096_prefix_control_d40n_seed43_r2_sys1of8_musica",
+    "start_checkpoint": "parents/dipper_30m_core_bin4096_parent_seed43.ckpt",
+    "resume_optimizer": false,
+    "resume_latest": false,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      6558,
+      7870
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "accelerator": "rtx6000"
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "run_name": "dipper-640m-core_bin4096-completep-many-lumi-n4-b16-d48n",
+  "run_notes": "LUMI 4-node CompleteP 640m many-peptides D=40N stable + 8N WSD cooldown. Per-GCD batch_size=16 (global 512, 47m critical batch). Mixed precision, MATMUL=highest, ns_dtype float32. Measured 4-node t_step=2.90s in 21681679. Warmup 500. Young every 1N (1747 steps). Permanent 10/20/30/40/48N. Restart after 21681679 died at step ~17345 (14h24m) from a ROCm HIP-graph OOM outside the XLA pool (hipGraphExecKernelNodeSetParams). This run disables XLA command buffers with XLA_FLAGS=--xla_gpu_enable_command_buffer= and resumes from the step 13976 Young checkpoint.",
+  "seed": 42,
+  "planning": {
+    "non_embedding_params": 637091328,
+    "stable_target_n": 40,
+    "cooldown_n": 8,
+    "total_target_n": 48,
+    "stable_target_loss_tokens": 25483653120,
+    "cooldown_target_loss_tokens": 5096730624,
+    "target_loss_tokens": 30580383744,
+    "residual_base_layers": 16,
+    "base_dim": 512,
+    "m_d": 3.0,
+    "m_L": 1.5,
+    "residual_scale": 0.6666666666666666,
+    "unembedding_scale": 0.3333333333333333,
+    "hidden_lr": 0.0005773502691896258,
+    "adamw_lr_ratio": 1.7320508075688772,
+    "hidden_weight_decay": 0.17320508075688773,
+    "adam_weight_decay": 0.1,
+    "step_count_status": "40n_plus_8n_at_global_512_loss_tokens_per_row_from_47m",
+    "calibrated_loss_tokens_per_step": 364720,
+    "t_step_s": 2.229,
+    "t_step_source": "21677374_1node_b16_median_steps_17_40",
+    "throughput_probe_tok_s": 58384,
+    "estimated_wall_h": 51.92,
+    "estimated_wall_h_4node_slack15": 59.71,
+    "stable_steps": 69872,
+    "cooldown_steps": 13974,
+    "total_steps": 83846,
+    "young_every_n": 1,
+    "young_every_steps": 1747,
+    "milestone_n": [
+      10,
+      20,
+      30,
+      40,
+      48
+    ],
+    "milestone_steps": [
+      17468,
+      34936,
+      52404,
+      69872,
+      83846
+    ],
+    "experiment_id": "completep_d48n",
+    "dataset": "many_peptides_md",
+    "global_batch": 512,
+    "nodes": 4,
+    "devices_per_node": 8,
+    "warmup_steps": 500,
+    "runtime": "host_rocm_jax050"
+  },
+  "model": {
+    "vocab_name": "core_bin4096",
+    "bin_tokens": 4096,
+    "bin_width_pm": 0.8,
+    "max_seq_len": 1028,
+    "dim": 1536,
+    "num_layers": 24,
+    "num_heads": 12,
+    "num_kv_heads": 6,
+    "head_dim": 128,
+    "intermediate_size": 4224,
+    "residual_scale": 0.6666666666666666,
+    "unembedding_scale": 0.3333333333333333,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true
+  },
+  "data": {
+    "batch_size": 16,
+    "prefetch": 16,
+    "prefetch_per_process": 16,
+    "data_loader_workers": 8,
+    "data_loader_workers_per_process": 8,
+    "sources": [
+      {
+        "name": "many_peptides",
+        "dir": "many-peptides-md/webdatasets/single_frames",
+        "adapter": "many_peptides",
+        "derive_chem_helm_from_smiles": false,
+        "environment_prompt": {
+          "water": "Amber-ff14SB in OBC1 implicit water"
+        },
+        "temperature": 310.0,
+        "packing": "greedy"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.0005773502691896258,
+    "total_steps": 83846,
+    "cooldown_steps": 13974,
+    "schedule": "wsd",
+    "warmup_steps": 500,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "float32",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.17320508075688773,
+    "adam_weight_decay": 0.1,
+    "adamw_lr_ratio": 1.7320508075688772,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 83846,
+    "log_every": 20,
+    "final_log_steps": 128,
+    "final_log_every": 1,
+    "save_every": 1747,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_640m_core_bin4096_completep_many_lumi_n4_b16_d48n",
+    "start_checkpoint": "parents/dipper_640m_core_bin4096_parent_seed42.ckpt",
+    "resume_optimizer": true,
+    "resume_latest": true,
+    "resume_latest_if_available": true,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      17468,
+      34936,
+      52404,
+      69872,
+      83846
+    ]
+  },
+  "devices": {
+    "nodes": 4,
+    "gpus_per_node": 8
+  }
+}

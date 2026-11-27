@@ -1,0 +1,127 @@
+{
+  "run_name": "dipper-320m-core_bin4096-completep-many-pristine-d160n-v1",
+  "run_notes": "Pristine CompleteP 320m on many-peptides: D=160N stable plus 32N WSD cooldown. Batch 32 per H100 NVL GPU, using the measured two-H100 throughput ceiling.",
+  "seed": 42,
+  "planning": {
+    "non_embedding_params": 330366976,
+    "stable_target_n": 160,
+    "cooldown_n": 32,
+    "total_target_n": 192,
+    "stable_target_loss_tokens": 52858716160,
+    "cooldown_target_loss_tokens": 10571743232,
+    "target_loss_tokens": 63430459392,
+    "calibrated_loss_tokens_per_step": 102476.33055690661,
+    "calibrated_allocated_tokens_per_second": 147886.0,
+    "calibrated_loss_tokens_per_second": 102476.33055690661,
+    "t_step_s": 0.44488322085931054,
+    "stable_steps": 515814,
+    "cooldown_steps": 103163,
+    "total_steps": 618977,
+    "milestone_n": [
+      20,
+      40,
+      80,
+      160
+    ],
+    "milestone_steps": [
+      64477,
+      128954,
+      257907,
+      515814
+    ],
+    "step_count_status": "calibrated_two_h100_batch32_probe",
+    "hardware": "2x H100 NVL",
+    "dataset": "many_peptides"
+  },
+  "model": {
+    "vocab_name": "core_bin4096",
+    "bin_tokens": 4096,
+    "bin_width_pm": 0.8,
+    "max_seq_len": 1028,
+    "dim": 1024,
+    "num_layers": 28,
+    "num_heads": 8,
+    "num_kv_heads": 4,
+    "head_dim": 128,
+    "intermediate_size": 2816,
+    "residual_scale": 0.5714285714285714,
+    "unembedding_scale": 0.5,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true
+  },
+  "data": {
+    "batch_size": 32,
+    "prefetch": 8,
+    "data_loader_workers": 4,
+    "sources": [
+      {
+        "name": "many_peptides",
+        "dir": "many-peptides-md/webdatasets/single_frames",
+        "adapter": "many_peptides",
+        "derive_chem_helm_from_smiles": false,
+        "environment_prompt": {
+          "water": "Amber-ff14SB in OBC1 implicit water"
+        },
+        "temperature": 310.0,
+        "packing": "greedy"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.0007071067811865475,
+    "total_steps": 618977,
+    "cooldown_steps": 103163,
+    "schedule": "wsd",
+    "warmup_steps": 5000,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "bfloat16",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.14142135623730953,
+    "adam_weight_decay": 0.1,
+    "adamw_lr_ratio": 1.4142135623730951,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 618977,
+    "log_every": 20,
+    "save_every": 1000,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_320m_core_bin4096_completep_many_pristine_d160n_v1",
+    "start_checkpoint": "parents/dipper_320m_core_bin4096_parent_seed42.ckpt",
+    "resume_optimizer": false,
+    "resume_latest": false,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      64477,
+      128954,
+      257907,
+      515814,
+      618977
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "accelerator": "h100nvl"
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "run_name": "dipper-160m-robin-ladder-l0-d40n-seed43-r1-arrhenius",
+  "run_notes": "ROBIN-to-PBG ladder rung L0, 160m, seed 43, atom conditioning. PBG level: none; ROBIN v14 level: the rest. Same loss-token budget as the atom arm.",
+  "seed": 43,
+  "planning": {
+    "seed": 43,
+    "reference_seed": 43,
+    "reference_parent": "parents/dipper_160m_core_bin4096_parent_seed43.ckpt",
+    "non_embedding_params": 159296256,
+    "non_embedding_params_note": "Trunk only; the atom conditioner adapter is excluded.",
+    "atom_conditioner_non_embedding_params": 5902848,
+    "atom_conditioner_embedding_params": 73728,
+    "stable_target_n": 40.29,
+    "cooldown_n": 8.06,
+    "total_target_n": 48.34,
+    "stable_target_loss_tokens": 6417292922,
+    "cooldown_target_loss_tokens": 1283531814,
+    "target_loss_tokens": 7700824736,
+    "loss_tokens_per_step": 149856,
+    "step_count_status": "estimated from the atom rate and the mean atom count; calibrate with a smoke run",
+    "warmup_steps": 514,
+    "stable_steps": 51389,
+    "cooldown_steps": 0,
+    "total_steps": 51389,
+    "reference_stable_run": "configs/dipper/rebuttal/musica/dipper_160m_core_bin4096_completep_d48n_seed43_g2_musica.json",
+    "reference_stable_step": 70106,
+    "reference_cooldown_run": "configs/dipper/rebuttal/musica/dipper_160m_core_bin4096_completep_d48n_seed43_g2_musica.json",
+    "code_snapshot": "code_snapshot.patch",
+    "site": "arrhenius",
+    "start_checkpoint_local": "parents/dipper_160m_core_bin8192_parent_seed43.ckpt",
+    "ladder_rung": 0,
+    "ladder_variant": null,
+    "ladder_order": [
+      "optimizer",
+      "schedule",
+      "precision",
+      "batches",
+      "loss",
+      "coordinates"
+    ],
+    "ladder_levels": {
+      "optimizer": "R",
+      "schedule": "R",
+      "precision": "R",
+      "batches": "R",
+      "loss": "R",
+      "coordinates": "R"
+    },
+    "ladder_upper_rung": "atom arm (L6): dipper-160m-core_bin4096-atom-conditioning-d40n-seed43-r2-arrhenius",
+    "devices": 4
+  },
+  "model": {
+    "vocab_name": "core_bin8192",
+    "bin_tokens": 8192,
+    "bin_width_pm": 0.3845684287632768,
+    "max_seq_len": 536,
+    "dim": 768,
+    "num_layers": 24,
+    "num_heads": 6,
+    "num_kv_heads": 3,
+    "head_dim": 128,
+    "intermediate_size": 2112,
+    "residual_scale": 0.6666666666666666,
+    "unembedding_scale": 0.6666666666666666,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": false,
+    "augment": true,
+    "translate": false,
+    "conditioning": "atom",
+    "loss_reduction": "sample",
+    "loss_terminator": false,
+    "center_of_mass": true,
+    "remat_blocks": true
+  },
+  "data": {
+    "batch_size": 112,
+    "prefetch": 8,
+    "data_loader_workers": 4,
+    "sources": [
+      {
+        "name": "many_peptides",
+        "dir": "many-peptides-md/webdatasets/single_frames",
+        "adapter": "many_peptides",
+        "derive_chem_helm_from_smiles": false,
+        "environment_prompt": {
+          "water": "Amber-ff14SB in OBC1 implicit water"
+        },
+        "temperature": 310.0,
+        "packing": "single"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.0005,
+    "total_steps": 51389,
+    "cooldown_steps": 0,
+    "schedule": "cosine",
+    "warmup_steps": 514,
+    "final_lr_frac": 0.0,
+    "grouping": "by_ndim",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "bfloat16",
+    "fan_in_scale": true,
+    "muon_scaling_patches": false,
+    "weight_decay": 0.0,
+    "adam_weight_decay": 0.1,
+    "adamw_lr_ratio": 0.1,
+    "adam_b1": 0.9,
+    "adam_b2": 0.999,
+    "adam_eps": 1e-08,
+    "grad_clip": 1.0,
+    "grad_clip_rel": 0.0,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100,
+    "div_factor": 500.0,
+    "final_div_factor": 1.0
+  },
+  "training": {
+    "num_steps": 51389,
+    "log_every": 20,
+    "save_every": 1000,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_160m_robin_ladder_L0_d40n_seed43_r1_arrhenius",
+    "start_checkpoint": "parents/dipper_160m_core_bin8192_parent_seed43.ckpt",
+    "resume_optimizer": false,
+    "resume_latest": false,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      51389,
+      51389
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "accelerator": "rtx6000"
+  }
+}

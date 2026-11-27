@@ -1,0 +1,142 @@
+{
+  "run_name": "dipper-47m-core_bin4096-completep-mdqm9-lumi-n1-b64-d80n",
+  "run_notes": "LUMI 1-node CompleteP 47m MDQM9-nc D=80N + 16N cooldown. Per-GCD batch_size=64 (global 512) from LUMI 47m throughput peak. Warmup 500. Compact env 'vacuum'. max_samples_factor=0.03. Data on flash tidy-mdqm9nc (1969 train tars).",
+  "seed": 42,
+  "planning": {
+    "non_embedding_params": 47206912,
+    "stable_target_n": 80,
+    "cooldown_n": 16,
+    "total_target_n": 96,
+    "stable_target_loss_tokens": 3776552960,
+    "cooldown_target_loss_tokens": 755310592,
+    "target_loss_tokens": 4531863552,
+    "residual_base_layers": 16,
+    "base_dim": 512,
+    "m_d": 1.0,
+    "m_L": 1.0,
+    "residual_scale": 1.0,
+    "unembedding_scale": 1.0,
+    "hidden_lr": 0.001,
+    "adamw_lr_ratio": 1.0,
+    "hidden_weight_decay": 0.1,
+    "adam_weight_decay": 0.1,
+    "eta0": 0.001,
+    "lambda0": 0.1,
+    "calibrated_loss_tokens_per_step": 364720,
+    "stable_steps": 10355,
+    "cooldown_steps": 2071,
+    "total_steps": 12426,
+    "milestone_n": [
+      20,
+      40,
+      80
+    ],
+    "milestone_steps": [
+      2589,
+      5178,
+      10355
+    ],
+    "experiment_id": "mdqm9",
+    "dataset": "mdqm9_nc_strict",
+    "global_batch": 512,
+    "nodes": 1,
+    "devices_per_node": 8,
+    "warmup_steps": 500,
+    "step_count_status": "proxy_47m_global128_ltps_91180_scaled_to_per_gcd_64_global_512"
+  },
+  "model": {
+    "vocab_name": "core_bin4096",
+    "bin_tokens": 4096,
+    "bin_width_pm": 0.8,
+    "max_seq_len": 1028,
+    "dim": 512,
+    "num_layers": 16,
+    "num_heads": 4,
+    "num_kv_heads": 2,
+    "head_dim": 128,
+    "intermediate_size": 1408,
+    "residual_scale": 1.0,
+    "unembedding_scale": 1.0,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true,
+    "max_samples_factor": 0.03
+  },
+  "data": {
+    "batch_size": 64,
+    "prefetch": 16,
+    "prefetch_per_process": 8,
+    "data_loader_workers": 8,
+    "data_loader_workers_per_process": 4,
+    "sources": [
+      {
+        "name": "mdqm9_nc_strict",
+        "dir": "tidy-mdqm9nc/webdatasets/single_frames/train",
+        "adapter": "n4_smiles",
+        "derive_chem_helm_from_smiles": true,
+        "prune_water_from_chem_helm": false,
+        "clip_solvent_to_fit": false,
+        "environment_prompt": {
+          "vacuum": "vacuum"
+        },
+        "on_decode_error": "raise",
+        "temperature": 300.0,
+        "packing": "greedy"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.001,
+    "total_steps": 12426,
+    "cooldown_steps": 2071,
+    "schedule": "wsd",
+    "warmup_steps": 500,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "float32",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.1,
+    "adam_weight_decay": 0.1,
+    "adamw_lr_ratio": 1.0,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 12426,
+    "save_every": 800,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_47m_core_bin4096_completep_mdqm9_lumi_n1_b64_d80n",
+    "start_checkpoint": "parents/dipper_47m_core_bin4096_parent_seed42.ckpt",
+    "resume_optimizer": true,
+    "resume_latest": true,
+    "resume_latest_if_available": true,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      2589,
+      5178,
+      10355,
+      12426
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 8
+  }
+}

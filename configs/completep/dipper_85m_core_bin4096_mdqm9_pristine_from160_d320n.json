@@ -1,0 +1,158 @@
+{
+  "run_name": "dipper-85m-core_bin4096-completep-mdqm9-pristine-from160-d320n-v1",
+  "run_notes": "Decay-free Azure branch from the verified 85M core_bin4096 160N checkpoint at the stable peak-LR boundary, step 119899. Continue to cumulative D=320N on MDQM9-nc-strict, then apply a 64N WSD cooldown. Batch 80 per H100, greedy packing, and max_samples_factor=0.03 are required for the short MDQM9 molecules. No second warmup.",
+  "seed": 42,
+  "planning": {
+    "non_embedding_params": 85543168,
+    "stable_target_n": 320,
+    "cooldown_n": 64,
+    "total_target_n": 384,
+    "stable_target_loss_tokens": 27373813760,
+    "cooldown_target_loss_tokens": 5474762752,
+    "target_loss_tokens": 32848576512,
+    "source_checkpoint": "checkpoints/dipper_85m_core_bin4096_ws_scaling_step_119899.ckpt",
+    "source_step": 119899,
+    "source_stable_n": 160,
+    "source_schedule": {
+      "lr": 0.001,
+      "total_steps": 143879,
+      "cooldown_steps": 23980,
+      "cooldown_start_step": 119899,
+      "warmup_steps": 3747
+    },
+    "source_lr_phase": "stable_peak_lr_boundary",
+    "source_lr_evidence": "The checkpoint step equals the embedded cooldown boundary. The source optimizer schedule has lr=0.001 and the update producing step 119899 used the constant peak-LR segment.",
+    "source_loss_tokens_per_step": 114233,
+    "source_loss_tokens_seen": 13696422467,
+    "remaining_stable_loss_tokens": 13677391293,
+    "calibrated_loss_tokens_per_step": 113975,
+    "calibrated_allocated_tokens_per_second": 256480.0,
+    "calibrated_loss_tokens_per_second": 177725.0,
+    "packing_loss_token_fraction": 0.6929413910505836,
+    "stable_steps": 120004,
+    "cooldown_steps": 48035,
+    "stable_end_step": 239903,
+    "total_steps": 287938,
+    "final_step": 287938,
+    "milestone_n": [
+      200,
+      240,
+      280,
+      320
+    ],
+    "milestone_steps": [
+      149838,
+      179859,
+      209881,
+      239903
+    ],
+    "step_count_status": "mdqm9_packing_rate_113975_from_47m_global512_rate_364720_scaled_to_azure_global160",
+    "absolute_step_mode": true,
+    "decay_free_ancestry": [
+      {
+        "checkpoint": "parents/dipper_85m_core_bin4096_parent_seed42.ckpt",
+        "phase": "initial_parent"
+      },
+      {
+        "checkpoint": "checkpoints/dipper_85m_core_bin4096_ws_scaling_step_119899.ckpt",
+        "step": 119899,
+        "phase": "stable_peak_lr_boundary"
+      }
+    ],
+    "dataset": "mdqm9_nc_strict",
+    "hardware": "2x H100 NVL"
+  },
+  "model": {
+    "vocab_name": "core_bin4096",
+    "bin_tokens": 4096,
+    "bin_width_pm": 0.8,
+    "max_seq_len": 1028,
+    "dim": 768,
+    "num_layers": 10,
+    "num_heads": 12,
+    "num_kv_heads": 6,
+    "head_dim": 128,
+    "intermediate_size": 2176,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true,
+    "max_samples_factor": 0.03
+  },
+  "data": {
+    "batch_size": 80,
+    "prefetch": 8,
+    "data_loader_workers": 4,
+    "sources": [
+      {
+        "name": "mdqm9_nc_strict",
+        "dir": "many_molecules/mdqm9-nc-strict-release/webdatasets/single_frames/train",
+        "adapter": "n4_smiles",
+        "derive_chem_helm_from_smiles": true,
+        "strip_water_from_chem_helm": false,
+        "clip_solvent_to_fit": false,
+        "environment_prompt": {
+          "vacuum": "vacuum"
+        },
+        "on_decode_error": "raise",
+        "temperature": 300.0,
+        "packing": "greedy"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.001,
+    "total_steps": 287938,
+    "cooldown_steps": 48035,
+    "schedule": "wsd",
+    "warmup_steps": 3747,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "bfloat16",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.1,
+    "adam_weight_decay": 0.1,
+    "adamw_lr_ratio": 1.0,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 287938,
+    "log_every": 20,
+    "save_every": 1000,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_85m_core_bin4096_completep_mdqm9_pristine_from160_d320n_v1",
+    "start_checkpoint": "checkpoints/dipper_85m_core_bin4096_ws_scaling_step_119899.ckpt",
+    "resume_optimizer": true,
+    "resume_latest": false,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      149838,
+      179859,
+      209881,
+      239903,
+      287938
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "accelerator": "h100nvl"
+  }
+}

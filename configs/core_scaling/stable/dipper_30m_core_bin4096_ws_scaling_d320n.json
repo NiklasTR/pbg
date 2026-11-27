@@ -1,0 +1,113 @@
+{
+  "run_name": "dipper-30m-core_bin4096-ws-scaling-d320n",
+  "run_notes": "Continue toward D=320N (+20% cooldown) from dipper_30m_core_bin4096_ws_scaling_step_31476.ckpt. Absolute step counters; does not retrain 0-160N.",
+  "seed": 42,
+  "planning": {
+    "non_embedding_params": 29895168,
+    "stable_target_n": 320,
+    "cooldown_n": 64,
+    "total_target_n": 384,
+    "stable_target_loss_tokens": 9566453760,
+    "cooldown_target_loss_tokens": 1913290752,
+    "target_loss_tokens": 11479744512,
+    "calibrated_loss_tokens_per_step": 182359,
+    "calibrated_loss_tokens_per_second": 432956.7,
+    "stable_steps": 26230,
+    "cooldown_steps": 10492,
+    "milestone_n": [
+      320
+    ],
+    "milestone_steps": [
+      26230
+    ],
+    "step_count_status": "calibrated_rtx6000",
+    "source_stable_n": 160,
+    "remaining_stable_n": 160,
+    "source_final_step": 31476,
+    "absolute_step_mode": true,
+    "stable_milestone_step": 57706
+  },
+  "model": {
+    "vocab_name": "core_bin4096",
+    "bin_tokens": 4096,
+    "bin_width_pm": 0.8,
+    "max_seq_len": 1028,
+    "dim": 512,
+    "num_layers": 8,
+    "num_heads": 8,
+    "num_kv_heads": 4,
+    "head_dim": 128,
+    "intermediate_size": 1408,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true
+  },
+  "data": {
+    "batch_size": 128,
+    "prefetch": 8,
+    "data_loader_workers": 4,
+    "sources": [
+      {
+        "name": "many_peptides",
+        "dir": "many-peptides-md/webdatasets/single_frames",
+        "adapter": "many_peptides",
+        "derive_chem_helm_from_smiles": false,
+        "environment_prompt": {
+          "water": "Amber-ff14SB in OBC1 implicit water"
+        },
+        "temperature": 310.0,
+        "packing": "greedy"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.001,
+    "total_steps": 68198,
+    "cooldown_steps": 10492,
+    "schedule": "wsd",
+    "warmup_steps": 5000,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "bfloat16",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.1,
+    "adamw_lr_ratio": 1.0,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 68198,
+    "save_every": 1000,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_30m_core_bin4096_ws_scaling_d320n",
+    "start_checkpoint": "checkpoints/dipper_30m_core_bin4096_ws_scaling_step_31476.ckpt",
+    "resume_optimizer": false,
+    "resume_latest": true,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      57706,
+      68198
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 2
+  }
+}

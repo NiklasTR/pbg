@@ -1,0 +1,117 @@
+{
+  "run_name": "dipper-320m-core-bin4096-completep-d48n-seed42-from257907-musica",
+  "run_notes": "Rebuttal 4igz Q4: 320m Table 2 recipe at D/N 48 (40N stable, 20% WSD cooldown), seed 42, branch of the Table 2 run at stable step 257907.",
+  "seed": 42,
+  "planning": {
+    "purpose": "Table 2 training-seed replicate at D/N 48 (reviewer 4igz Q4)",
+    "experiment_id": "rebuttal_table2_d48",
+    "seed": 42,
+    "stable_target_n": 40,
+    "cooldown_n": 8.0,
+    "table2_config": "configs/dipper/ws_scaling/completep/dipper_320m_core_bin4096_many_pristine_d160n.json",
+    "table2_model": "dipper_320m_core_bin4096_completep_many_pristine_d160n_v1_step_618977",
+    "non_embedding_params": 330366976,
+    "loss_tokens_per_step": 45802,
+    "loss_tokens_per_step_source": "metrics.sqlite loss_tokens_seen / step of the Table 2 checkpoint",
+    "stable_end_step": 288518,
+    "cooldown_steps": 57704,
+    "final_step": 346222,
+    "stable_n": 40.00006779127948,
+    "total_n": 48.00013680544147,
+    "epochs": 0.10890726437602588,
+    "devices": 2,
+    "global_batch_rows": 64,
+    "start_checkpoint_local": "checkpoints/dipper_320m_core_bin4096_completep_many_pristine_d160n_v1_step_257907.ckpt",
+    "source_step": 257907,
+    "source_phase": "stable (peak LR; Table 2 cooldown starts at step 515814)",
+    "site": "musica"
+  },
+  "model": {
+    "vocab_name": "core_bin4096",
+    "bin_tokens": 4096,
+    "bin_width_pm": 0.8,
+    "max_seq_len": 1028,
+    "dim": 1024,
+    "num_layers": 28,
+    "num_heads": 8,
+    "num_kv_heads": 4,
+    "head_dim": 128,
+    "intermediate_size": 2816,
+    "residual_scale": 0.5714285714285714,
+    "unembedding_scale": 0.5,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true
+  },
+  "data": {
+    "batch_size": 32,
+    "prefetch": 8,
+    "data_loader_workers": 4,
+    "sources": [
+      {
+        "name": "many_peptides",
+        "dir": "many-peptides-md/webdatasets/single_frames",
+        "adapter": "many_peptides",
+        "derive_chem_helm_from_smiles": false,
+        "environment_prompt": {
+          "water": "Amber-ff14SB in OBC1 implicit water"
+        },
+        "temperature": 310.0,
+        "packing": "greedy"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.0007071067811865475,
+    "total_steps": 346222,
+    "cooldown_steps": 57704,
+    "schedule": "wsd",
+    "warmup_steps": 5000,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "bfloat16",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.14142135623730953,
+    "adam_weight_decay": 0.1,
+    "adamw_lr_ratio": 1.4142135623730951,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 346222,
+    "log_every": 20,
+    "save_every": 1000,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_320m_core_bin4096_completep_d48n_seed42_from257907_musica",
+    "start_checkpoint": "checkpoints/dipper_320m_core_bin4096_completep_many_pristine_d160n_v1_step_257907.ckpt",
+    "resume_optimizer": true,
+    "resume_latest": false,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      288518,
+      346222
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "accelerator": "rtx6000"
+  }
+}

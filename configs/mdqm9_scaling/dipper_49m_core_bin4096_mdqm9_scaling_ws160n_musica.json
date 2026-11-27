@@ -1,0 +1,138 @@
+{
+  "run_name": "dipper-49m-core_bin4096-mdqm9-scaling-ws160n-musica",
+  "run_notes": "MDQM9-nc scaling trunk: 49m from the seed-42 parent, stable to 160N, then a 32N WSD cooldown. Permanent stable checkpoints at [10, 20, 40, 80, 160]N feed the cooldown-only branches. Analog: dipper-49m-core_bin4096-ws-scaling-d160n. Lineage 0.9318 epoch.",
+  "seed": 42,
+  "planning": {
+    "experiment_id": "mdqm9_scaling",
+    "dataset": "mdqm9_nc_strict",
+    "site": "musica",
+    "plan": "docs/rebuttal/mdqm9-scaling-campaign.md",
+    "analog_config": "configs/dipper/ws_scaling/core/dipper_49m_core_bin4096_ws_scaling.json",
+    "analog_run": "dipper-49m-core_bin4096-ws-scaling-d160n",
+    "non_embedding_params": 49164928,
+    "stable_target_n": 160,
+    "cooldown_n": 32.0,
+    "total_target_n": 192.0,
+    "target_loss_tokens": 9439666176,
+    "loss_tokens_per_step": 138462,
+    "step_count_status": "measured_musica_h100_dev_smoke_1937770_1937771",
+    "warmup_steps": 1776,
+    "warmup_rule": "5N loss tokens",
+    "stable_steps": 56813,
+    "cooldown_steps": 11363,
+    "total_steps": 68176,
+    "epoch_loss_tokens": 10130176000,
+    "epoch_cap": 0.95,
+    "lineage_loss_tokens": 9439785312,
+    "lineage_epochs": 0.9318,
+    "node": "node1",
+    "lane": 1,
+    "start_checkpoint_local": "parents/dipper_49m_core_bin4096_parent_seed42.ckpt",
+    "milestone_n": [
+      10,
+      20,
+      40,
+      80,
+      160
+    ],
+    "milestone_steps": [
+      3551,
+      7102,
+      14204,
+      28407,
+      56813
+    ]
+  },
+  "model": {
+    "vocab_name": "core_bin4096",
+    "bin_tokens": 4096,
+    "bin_width_pm": 0.8,
+    "max_seq_len": 1028,
+    "dim": 640,
+    "num_layers": 8,
+    "num_heads": 10,
+    "num_kv_heads": 5,
+    "head_dim": 128,
+    "intermediate_size": 1920,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true,
+    "max_samples_factor": 0.03
+  },
+  "data": {
+    "batch_size": 112,
+    "prefetch": 8,
+    "data_loader_workers": 4,
+    "sources": [
+      {
+        "name": "mdqm9_nc_strict",
+        "dir": "many_molecules/mdqm9-nc-strict-release/webdatasets/single_frames/train",
+        "adapter": "n4_smiles",
+        "derive_chem_helm_from_smiles": true,
+        "prune_water_from_chem_helm": false,
+        "clip_solvent_to_fit": false,
+        "environment_prompt": {
+          "vacuum": "vacuum"
+        },
+        "on_decode_error": "raise",
+        "temperature": 300.0,
+        "packing": "greedy"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.001,
+    "total_steps": 68176,
+    "cooldown_steps": 11363,
+    "schedule": "wsd",
+    "warmup_steps": 1776,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "bfloat16",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.1,
+    "adamw_lr_ratio": 1.0,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 68176,
+    "save_every": 1000,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_49m_core_bin4096_mdqm9_scaling_ws160n_musica",
+    "start_checkpoint": "parents/dipper_49m_core_bin4096_parent_seed42.ckpt",
+    "resume_optimizer": false,
+    "resume_latest": false,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      3551,
+      7102,
+      14204,
+      28407,
+      56813,
+      68176
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "accelerator": "rtx6000"
+  }
+}

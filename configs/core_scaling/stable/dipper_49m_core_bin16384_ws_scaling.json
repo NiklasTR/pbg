@@ -1,0 +1,117 @@
+{
+  "run_name": "dipper-49m-core_bin16384-ws-scaling-d160n",
+  "run_notes": "D=160N stable training plus a 32N (20%) WSD cooldown.",
+  "seed": 42,
+  "planning": {
+    "non_embedding_params": 49164928,
+    "stable_target_n": 160,
+    "cooldown_n": 32,
+    "total_target_n": 192,
+    "stable_target_loss_tokens": 7866388480,
+    "cooldown_target_loss_tokens": 1573277696,
+    "target_loss_tokens": 9439666176,
+    "calibrated_loss_tokens_per_step": 114154,
+    "calibrated_loss_tokens_per_second": 289497.4,
+    "stable_steps": 68911,
+    "cooldown_steps": 13783,
+    "milestone_n": [
+      20,
+      40,
+      80,
+      160
+    ],
+    "milestone_steps": [
+      8614,
+      17228,
+      34456,
+      68911
+    ],
+    "step_count_status": "calibrated_rtx6000"
+  },
+  "model": {
+    "vocab_name": "core_bin16384",
+    "bin_tokens": 16384,
+    "bin_width_pm": 0.2,
+    "max_seq_len": 1028,
+    "dim": 640,
+    "num_layers": 8,
+    "num_heads": 10,
+    "num_kv_heads": 5,
+    "head_dim": 128,
+    "intermediate_size": 1920,
+    "rope_theta": 1000.0,
+    "level_pe_theta": 10.0,
+    "rms_norm_eps": 1e-06,
+    "mixed_precision": true,
+    "augment": true,
+    "translate": true
+  },
+  "data": {
+    "batch_size": 80,
+    "prefetch": 8,
+    "data_loader_workers": 4,
+    "sources": [
+      {
+        "name": "many_peptides",
+        "dir": "many-peptides-md/webdatasets/single_frames",
+        "adapter": "many_peptides",
+        "derive_chem_helm_from_smiles": false,
+        "environment_prompt": {
+          "water": "Amber-ff14SB in OBC1 implicit water"
+        },
+        "temperature": 310.0,
+        "packing": "greedy"
+      }
+    ]
+  },
+  "optimizer": {
+    "lr": 0.001,
+    "total_steps": 82694,
+    "cooldown_steps": 13783,
+    "schedule": "wsd",
+    "warmup_steps": 5000,
+    "final_lr_frac": 0.0,
+    "grouping": "matrix_except_embed",
+    "muon_momentum": 0.95,
+    "ns_iters": 5,
+    "ns_dtype": "bfloat16",
+    "fan_in_scale": false,
+    "muon_scaling_patches": true,
+    "weight_decay": 0.1,
+    "adamw_lr_ratio": 1.0,
+    "adam_b1": 0.9,
+    "adam_b2": 0.95,
+    "adam_eps": 1e-08,
+    "grad_clip": 10.0,
+    "grad_clip_rel": 1.5,
+    "grad_clip_rel_beta": 0.99,
+    "grad_clip_rel_warmup": 100
+  },
+  "training": {
+    "num_steps": 82694,
+    "save_every": 1000,
+    "wandb": {
+      "enabled": false
+    }
+  },
+  "checkpoint": {
+    "dir": "checkpoints",
+    "prefix": "dipper_49m_core_bin16384_ws_scaling",
+    "start_checkpoint": "parents/dipper_49m_core_bin16384_parent_seed42.ckpt",
+    "resume_optimizer": false,
+    "resume_latest": false,
+    "auto_resume": true,
+    "recent": 3,
+    "permanent_steps": [
+      8614,
+      17228,
+      34456,
+      68911
+    ]
+  },
+  "devices": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "accelerator": "rtx6000"
+  }
+}
